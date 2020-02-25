@@ -1,22 +1,13 @@
-import { Comment, subscribe } from '../models/Comment'
-import {useEffect, useState} from 'react'
+import { Comment } from '../models/Comment'
+import { useState, useEffect } from 'react'
+import { useComments$Subscribe } from '../observables/comments'
 
-export interface CommentListProps {
-  initialComments: Comment[]
-}
-
-const CommentList: React.FC<CommentListProps> = props => {
-  const [count, setCount] = useState(props.initialComments.length)
-  useEffect(() => {
-    subscribe(comment => {
-      console.log('received comment: ', comment)
-      setCount(count + 1)
-    })
-  }, [count])
-
+const CommentList: React.FC = props => {
+  const [ comments, setComments ] = useState<Comment[]>([])
+  useComments$Subscribe((comment) => setComments([...comments, comment]))
   return <div>
     [YOU CAN PUT COMMENT LIST COMPONENT HERE, OR ANYWHERE YOU WANT REALLY!]
-    there are {count} comments so far.
+    there are {comments.length} comments so far.
   </div>
 }
 
